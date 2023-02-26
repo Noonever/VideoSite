@@ -4,6 +4,7 @@ from django.urls import reverse
 from random import choices
 from string import ascii_uppercase
 from pathlib import Path
+from loguru import logger
 
 from moviepy.video.io.ffmpeg_tools import ffmpeg_extract_subclip
 from moviepy.editor import *
@@ -36,19 +37,19 @@ class Video(models.Model):
     @staticmethod
     def generate(name: str):
 
+        
         code = genetate_unique_code()
 
         processed_video_file_path = f'{BASE_DIR}\\media\\processed_videos\\{code}.mp4'
         source_video_file_path = f'{BASE_DIR}\\media\\source_videos\\example vid.mp4'
-        print(processed_video_file_path)
-        print(source_video_file_path)
-        text_to_input = name + "Hello, world!"
+        text_to_input = name + " hello!"
 
+        logger.info(f"Started clip generation. Code:{code}. Text: {text_to_input}")
         # Load the video clip
         clip = VideoFileClip(source_video_file_path)
 
         # Define a function to add text to a single frame
-        txt_clip = TextClip(text_to_input, fontsize=140, color='yellow', font='Arial')
+        txt_clip = TextClip(text_to_input, fontsize=140, color='red', font='Arial')
         txt_clip = txt_clip.set_pos('center')
 
         # Define the output video settings
@@ -58,8 +59,11 @@ class Video(models.Model):
         final_clip.duration = clip.duration
         final_clip.write_videofile(processed_video_file_path, fps=fps, threads=4)
 
+        logger.info(f"Ended clip generation. Code:{code}.")
+
         video = Video(code=code, file=processed_video_file_path)
         video.save()
+        logger.info(f"Clip {code} was saced to db.")
 
         return video
 

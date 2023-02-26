@@ -15,7 +15,11 @@
         </button>
     </div>
     <div class="container">
-        <video src="" width="100%" controls loop></video>
+        {% for video in videos %}
+        <video width="100%" controls loop>
+            <source  src="{{ video.file.url }}" type="video/mp4"/>
+        </video>
+        {% endfor %}
     </div>
     <div class="container">
         <button>

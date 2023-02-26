@@ -10,14 +10,48 @@
 </head>
 <body>
     <div class="container">
-        <p class="content">{{ text }}</p>
+        <p class="content" id="changing">YOUR NAME</p>
     </div>
     <div class="container">
-        <form action="{% url 'start_page' %}" method="post">
+        <form action="{% url 'start_page' %}" method="post" id="nameForm">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit">YOU NEED TO HEAR THIS</button>
         </form>
     </div>
+    <script>
+        var form = document.getElementById("nameForm");
+        var text = document.getElementById("changing");
+        
+        form.onsubmit = submitted.bind(form);
+
+        var sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+
+        var changeText = async (element) => {
+            text = element;
+            text.style.color = 'rgba(0, 0, 0, 0)';
+            await sleep(1000);
+            text.textContent = "MAGIC BEGINS";
+            text.style.color = 'rgba(255, 99, 71, 255)';
+            await sleep(3000);
+            while (true) {
+                text.style.color = 'rgba(0, 0, 0, 0)';
+                await sleep(1000);
+                text.textContent = "MAGIC BEGINS first while";
+                text.style.color = 'rgb(0, 89, 255)';
+                await sleep(3000);
+                text.style.color = 'rgba(0, 0, 0, 0)';
+                await sleep(1000);
+                text.textContent = "MAGIC BEGINS second while";
+                text.style.color = 'rgb(0, 255, 213)';
+                await sleep(3000);
+            }
+        }
+
+        async function submitted(event) {
+            console.log("subminnterasf");
+            changeText(text)
+        }
+    </script>
 </body>
 </html>

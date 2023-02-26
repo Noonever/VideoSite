@@ -15,8 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('8sKJ0124lkjGEV09AVWEoiv196KGMEWV90125LMEGMEWmkgewJFEIGUN1948tKJJGew93g2620tKGJENKVE/', admin.site.urls),
     path('', include('generator.urls'))
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
