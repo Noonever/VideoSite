@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link type="text/css" href="{% static 'generator/css/all.css'%}" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <p class="content">{{ text }}</p>
+    </div>
+    <div class="container">
+        <form action="{% url 'start_page' %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">YOU NEED TO HEAR THIS</button>
+        </form>
+    </div>
+</body>
+</html>
