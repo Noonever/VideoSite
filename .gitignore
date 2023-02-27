@@ -3,3 +3,4 @@
 *.mp4
 *.sqlite3
 test.py
+*.pyc
