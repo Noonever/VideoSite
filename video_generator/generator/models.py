@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 
 from random import choices
 from string import ascii_uppercase
@@ -26,7 +27,8 @@ def genetate_unique_code():
 class Video(models.Model):
 
     code = models.CharField(verbose_name='code of video', default=genetate_unique_code, max_length=8, unique=True)
-    file = models.FileField(upload_to='final_videos',null=True)
+    file = models.FileField(verbose_name='path', upload_to='final_videos',null=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def get_absolute_url(self):
         return reverse('', kwargs={'code': self.code})
@@ -37,19 +39,19 @@ class Video(models.Model):
     @staticmethod
     def generate(name: str):
 
-        
         code = genetate_unique_code()
 
         processed_video_file_path = f'{BASE_DIR}\\media\\processed_videos\\{code}.mp4'
         source_video_file_path = f'{BASE_DIR}\\media\\source_videos\\example vid.mp4'
-        text_to_input = name + " hello!"
+        text_name = name.lower().capitalize() + ','
+        text_to_input = text_name + " hello!"
 
-        logger.info(f"Started clip generation. Code:{code}. Text: {text_to_input}")
+        logger.info(f"Started clip generation. Code: {code}. Text: {text_to_input}")
         # Load the video clip
         clip = VideoFileClip(source_video_file_path)
 
         # Define a function to add text to a single frame
-        txt_clip = TextClip(text_to_input, fontsize=140, color='red', font='Arial')
+        txt_clip = TextClip(text_to_input, fontsize=110, color='orange', font='Calibri-Bold', stroke_width=7, stroke_color='black')
         txt_clip = txt_clip.set_pos('center')
 
         # Define the output video settings
@@ -57,13 +59,13 @@ class Video(models.Model):
 
         final_clip = CompositeVideoClip([clip, txt_clip])
         final_clip.duration = clip.duration
-        final_clip.write_videofile(processed_video_file_path, fps=fps, threads=4)
+        final_clip.write_videofile(processed_video_file_path, fps=fps, threads=4, logger=None)
 
-        logger.info(f"Ended clip generation. Code:{code}.")
+        logger.info(f"Ended clip generation. Code: {code}.")
 
         video = Video(code=code, file=processed_video_file_path)
         video.save()
-        logger.info(f"Clip {code} was saced to db.")
+        logger.info(f"Clip {code} was saved to db.")
 
         return video
 
